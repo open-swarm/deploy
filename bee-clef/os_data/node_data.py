@@ -7,15 +7,29 @@ def node_data():
     mem = memory_stat()
     data = {}
     points = []
+
+    # cpu 核数
     data["cpu_count"] = os.cpu_count()
+
+    # 服务器内存
     data["ram_total"] = mem['MemTotal'] / 1024 / 1024 / 1024
+
+    # 获取cpu 使用率
     data["cpu_usage"] = psutil.cpu_percent(interval=1, percpu=False)
+
+    # 内存使用大小
     data["ram_usage"] = mem['MemUsed'] / 1024 / 1024 / 1024
+
+    # 获取系统磁盘大小
     disk = os.popen(
         "lsblk |egrep '^(v|s)d[a-z]' |awk '{print $4}'|sed 's/[a-Z]//'|awk '{disk[$1]++} END {for(i in disk){print i}}' |awk '{sum +=$1};END{print sum}'").readlines()[
         0]
     data["disk"] = int(str(disk).replace("G", "").strip("G\t/root\n"))
+
+    # 获取bee占用文件大小
     data["folder"] = int(disk_usage()) * 1024
+
+    # 获取与bee节点通信的节点
     ips = os.popen(
         "netstat -tun | grep \":1634\" | awk '{print $5}' | cut -d: -f1 | sort | sort -n").readlines()
     for n in ips:
