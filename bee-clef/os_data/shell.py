@@ -11,7 +11,7 @@ import time
 def shell():
     data = {}
     # data = os.system("chmod +x /root/bee-clef/address.sh && /root/bee-clef/address.sh")
-    # 获取余额
+    # 地址bee 节点分配的地址
     tmp = os.popen("chmod +x /root/bee-clef/address.sh && /root/bee-clef/address.sh").readlines()[0]
     str_data = json.loads(str(tmp).strip("\n").encode("utf-8"))
     data["address"] = str_data["result"][0]
