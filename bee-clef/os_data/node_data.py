@@ -1,13 +1,15 @@
 import psutil
 import os
 import platform
+import logger
+
+log = logger.Logger('info.log', level='debug')
 
 
 def node_data():
     mem = memory_stat()
     data = {}
     points = []
-
     # cpu 核数
     data["cpu_count"] = os.cpu_count()
 
@@ -42,7 +44,7 @@ def node_data():
     for i in cash:
         cashs.append(str(i).strip("\n"))
     data["cash"] = cashs
-    print(data)
+    log.logger.info(data)
     return data
 
 

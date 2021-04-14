@@ -6,20 +6,21 @@ import hashlib
 import json
 import node_data
 import shell
-
 import os
+
+import logger
 
 timstamp = math.ceil(time.time())
 
 # 上报数据接口，上报数据全部都是json格式
-var url = ''
+url = ''
+
+log = logger.Logger('info.log', level='debug')
 
 
 def request():
     data = {}
     m = hashlib.md5()
-
-    headers = {"content-type": "application/json"}
     try:
         result = {"code": 1, "msg": "success", "data": data, "timestamp": timstamp}
 
@@ -34,17 +35,19 @@ def request():
         data["nid"] = str(nid.readlines()[0]).strip("\n")
         m.update(str(result).encode("utf-8"))
         result["sec"] = m.hexdigest()
-        print(result)
+        log.logger.info(result)
         out = requests.post(url,
                             json=result)
-        print(out.text)
+        log.logger.info(out)
     except:
         result["code"] = 0
         result["msg"] = "获取数据错误".encode("utf-8")
         m.update(str(result).encode("utf-8"))
         result["sec"] = m.hexdigest()
         requests.post(url,
-                    data=json.dumps(str(result), ensure_ascii=False))
+                      data=json.dumps(str(result), ensure_ascii=False))
+
+        log.logger.error(result)
 
 
 if __name__ == '__main__':

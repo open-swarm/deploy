@@ -7,6 +7,10 @@ import json
 import math
 import time
 
+import logger
+
+log = logger.Logger('info.log', level='debug')
+
 
 def shell():
     data = {}
@@ -38,7 +42,7 @@ def shell():
             data["swarm_state"] = -2
     else:
         data["swarm_state"] = -2
-    print(data)
+    log.logger.info(data)
     return data
 
 
