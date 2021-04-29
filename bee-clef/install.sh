@@ -1,4 +1,6 @@
 #!/bin/bash
+
+mv deploy/deploy/bee-clef  /root
 yum install epel-release -y
 yum install -y  wget jq nc supervisor
 timedatectl set-timezone Asia/Shanghai
