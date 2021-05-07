@@ -1,54 +1,40 @@
+import config
 import requests
-import math
 import time
-
-import hashlib
-import json
-import node_data
-import shell
-import os
-
+import node
+import swarm
 import logger
-
-timstamp = math.ceil(time.time())
-
-# 上报数据接口，上报数据全部都是json格式
-url = ''
+import MD5Utils
 
 log = logger.Logger('info.log', level='debug')
 
+import os
 
-def request():
+timstamp = int(time.time())
+
+
+def bee():
     data = {}
-    m = hashlib.md5()
     try:
-        result = {"code": 1, "msg": "success", "data": data, "timestamp": timstamp}
-
-        # 获取服务器相关数据
-        data["monitor_data"] = node_data.node_data()
-
-        # 获取bee 节点相关数据
-        data["node_data"] = shell.shell()
-
-        # 每个系统的唯一id,标识是哪台服务器
+        result = {"code": 1, "msg": "success", "data": data}
+        data["monitor_data"] = node.node_data()
+        data["node_data"] = swarm.shell()
         nid = os.popen("cat /sys/class/dmi/id/product_uuid")
         data["nid"] = str(nid.readlines()[0]).strip("\n")
-        m.update(str(result).encode("utf-8"))
-        result["sec"] = m.hexdigest()
+        data["time"] = timstamp
+        uid = data["nid"]
+        result["type"] = "swarm"
+        result["data"] = str(data)
+        da = str(data)
+        result["sign"] = MD5Utils.md5To2(da, uid)
         log.logger.info(result)
-        out = requests.post(url,
-                            json=result)
-        log.logger.info(out)
+        url = config.getConfig("node", "push.url")
+        out = requests.post(url + "m/swarm/api/swarm_node_data",
+                            data=result)
+        log.logger.info(out.text)
     except:
-        result["code"] = 0
-        result["msg"] = "获取数据错误".encode("utf-8")
-        m.update(str(result).encode("utf-8"))
-        result["sec"] = m.hexdigest()
-        requests.post(url,
-                      data=json.dumps(str(result), ensure_ascii=False))
-
-        log.logger.error(result)
+        log.logger.error("发生错误了")
 
 
-if __name__ == '__main__':
-    request()
+if __name__ == "__main__":
+    bee()

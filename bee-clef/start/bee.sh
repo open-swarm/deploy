@@ -2,7 +2,7 @@
 bee start \
   --verbosity 5 \
     --swap-enable \
-  --swap-endpoint https://rpc.slock.it/goerli \
+  --swap-endpoint http://194.233.68.169:8545 \
   --debug-api-enable \
   --clef-signer-enable \
   --clef-signer-endpoint /var/lib/bee-clef/clef.ipc \

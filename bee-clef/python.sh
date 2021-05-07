@@ -1,6 +1,23 @@
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+﻿chmod +x /root/bee-clef/CentOS_Python3.6.sh
 
-python3 get-pip.py
+yum install net-tools -y
+
+v=`python3 -V | cut -c 1-6`
+
+echo $v
+
+if [[ "$v" != "Python" ]] 
+then 
+   sh /root/bee-clef/CentOS_Python3.6.sh
+fi
+
+
+python3 /root/bee-clef/get-pip.py
+
+pip install --upgrade pip
+
+pip install ConfigParser
+
 
 pip install requests
 
